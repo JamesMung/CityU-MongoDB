@@ -58,12 +58,12 @@ public class DeptController {
 
     @PutMapping("/update")
     @ResponseBody
-    public Message update(DeptDto deptDto) {
-        if (!deptDto.isValid()) {
+    public Message update(Department dept) {
+        if (!dept.isValid()) {
             return MessageUtils.returnErrorMsg(Constants.Message.ALL_MANDATORY_FIELDS);
         }
 
-        deptService.updateDept(deptDto);
+        deptService.updateDept(dept);
         return MessageUtils.returnSuccessMsg(Constants.Message.UPDATE_SUCCEED);
     }
 

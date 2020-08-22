@@ -10,6 +10,14 @@ public class Course {
     private String title;
     private String level;
 
+    public Course() {
+    }
+
+    public Course(String title, String level) {
+        this.title = title;
+        this.level = level;
+    }
+
     public String getCourseId() {
         return courseId;
     }

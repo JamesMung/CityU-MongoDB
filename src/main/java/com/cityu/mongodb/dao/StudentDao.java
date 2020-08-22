@@ -2,8 +2,6 @@ package com.cityu.mongodb.dao;
 
 import com.cityu.mongodb.constants.Constants;
 import com.cityu.mongodb.model.*;
-import com.mongodb.client.model.UpdateOneModel;
-import com.mongodb.client.result.UpdateResult;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -28,7 +26,7 @@ public class StudentDao extends AbstractDao {
         // Add user record
         User maxIdUser = dao.findOne(new Query().with(Sort.by(Sort.Direction.DESC, "id")).limit(1), User.class);
         User u = new User();
-        u.setId(maxIdUser.getId() + 1);
+        u.setId(maxIdUser == null ? 0 : maxIdUser.getId() + 1);
         u.setPassword(Constants.DEFAULT_PWD);
         u.setRole(Constants.UserRole.STUDENT);
         u.setUsername(student.getStuId());

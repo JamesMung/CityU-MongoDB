@@ -1,7 +1,7 @@
 package com.cityu.mongodb.model;
 
 
-import com.cityu.mongodb.dto.DeptDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.util.StringUtils;
 
@@ -36,8 +36,9 @@ public class Department {
         this.location = location;
     }
 
+    @JsonIgnore
     public boolean isValid() {
-        return StringUtils.isEmpty(deptId) && StringUtils.isEmpty(deptName) && StringUtils.isEmpty(location);
+        return !StringUtils.isEmpty(deptId) && !StringUtils.isEmpty(deptName) && !StringUtils.isEmpty(location);
     }
 
 }

@@ -48,8 +48,8 @@ public class DeptService {
         this.deptDao = deptDao;
     }
 
-    public void updateDept(DeptDto deptDto) {
-        deptDao.updateDept(deptDto);
+    public void updateDept(Department dept) {
+        deptDao.updateDept(dept);
     }
 
     public void deleteDept(String deptId) {

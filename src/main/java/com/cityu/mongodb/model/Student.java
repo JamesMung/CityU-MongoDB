@@ -1,5 +1,6 @@
 package com.cityu.mongodb.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
 
 import java.util.Date;
@@ -9,6 +10,7 @@ public class Student {
     private String stuId;
 
     private String stuName;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date DOB;
 
     public String getStuId() {

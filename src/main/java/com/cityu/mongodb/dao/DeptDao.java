@@ -1,7 +1,5 @@
 package com.cityu.mongodb.dao;
 
-import com.cityu.mongodb.dto.DeptDto;
-import com.cityu.mongodb.model.Course;
 import com.cityu.mongodb.model.Department;
 import com.cityu.mongodb.model.Enrolled;
 import com.cityu.mongodb.model.Offer;
@@ -10,7 +8,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -42,14 +39,10 @@ public class DeptDao extends AbstractDao {
     }
 
     @Transactional
-    public void updateDept(DeptDto deptDto) {
-        Department dept = deptDto.applyToDept();
-        dao.update(Department.class)
-                .matching(Criteria.where("deptId").is(deptDto.getOrigDeptId()))
-                .replaceWith(dept)
-                .findAndReplaceValue();
+    public void updateDept(Department dept) {
+        dao.updateFirst(Query.query(Criteria.where("deptId").is(dept.getDeptId())), new Update().set("deptName",dept.getDeptName()).set("location", dept.getLocation()), Department.class);
 
-        dao.updateMulti(Query.query(Criteria.where("dept.deptId").is(deptDto.getOrigDeptId())), Update.update("dept", dept), Offer.class);
+        dao.updateMulti(Query.query(Criteria.where("dept.deptId").is(dept.getDeptId())), Update.update("dept", dept), Offer.class);
     }
 
     @Transactional
