@@ -1,24 +1,18 @@
 package com.cityu.mongodb;
 
+import com.cityu.mongodb.constants.Constants;
 import com.cityu.mongodb.dao.DeptDao;
 import com.cityu.mongodb.dao.StudentDao;
 import com.cityu.mongodb.model.*;
 import com.google.common.collect.ImmutableMap;
-import org.ajbrown.namemachine.Name;
-import org.ajbrown.namemachine.NameGenerator;
+import me.xdrop.jrand.JRand;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SpringBootTest
 class SampleDataGenerator {
@@ -54,28 +48,40 @@ class SampleDataGenerator {
 
     @Test
     void insert() {
-        generateDept();
-        generateCourse();
-        generateStudent();
-        enrollCourse();
+        List<Department> deptList = generateDept();
+        List<Offer> offerList = generateCourse(deptList);
+        insertAdmin();
+        List<Student> studentList = generateStudent();
+        enrollCourse(offerList, studentList);
+    }
+
+    private void insertAdmin() {
+        User u = new User();
+        u.setId(0);
+        u.setUsername("Admin");
+        u.setPassword(Constants.DEFAULT_PWD);
+        u.setRole(Constants.UserRole.ADMIN);
+
+        dao.insert(u);
     }
 
     @Test
     void clearAll() {
-        dao.remove(User.class);
-        dao.remove(Student.class);
-        dao.remove(Department.class);
-        dao.remove(Course.class);
-        dao.remove(Offer.class);
-        dao.remove(Enrolled.class);
+        dao.dropCollection(User.class);
+        dao.dropCollection(Student.class);
+        dao.dropCollection(Department.class);
+        dao.dropCollection(Course.class);
+        dao.dropCollection(Offer.class);
+        dao.dropCollection(Enrolled.class);
     }
 
-    private void enrollCourse() {
-        List<Student> stuList = studentDao.findAllStudents();
-        List<Offer> offerList = dao.findAll(Offer.class);
+    private void enrollCourse(List<Offer> offerList, List<Student> studentList) {
         for (int i = 0; i < 800; i++) {
-            enroll(stuList.get(i), offerList);
+            enroll(studentList.get(i), offerList);
         }
+
+        // insert DB
+        offerList.forEach(o -> dao.insert(o));
     }
 
     private void enroll(Student student, List<Offer> offerList) {
@@ -95,18 +101,16 @@ class SampleDataGenerator {
                 e.setEnrolDate(dateFormat.parse(offer.getYear() + "-" + calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH)));
 
                 dao.insert(e);
-
-                dao.updateFirst(Query.query(Criteria.where("course.courseId").is(offer.getCourse().getCourseId()).and("year").is(offer.getYear())), Update.update("availablePlaces", offer.getAvailablePlaces() - 1), Offer.class);
+                offer.setAvailablePlaces(offer.getAvailablePlaces() - 1);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void generateCourse() {
-        List<Department> list = deptDao.findAllList();
-
-        for (Department dept: list) {
+    private List<Offer> generateCourse(List<Department> deptList) {
+        List<Offer> result = new ArrayList<>(690);
+        for (Department dept: deptList) {
             int num = 101;
 
             List<String> l5List = L5_COURSE_MAPPING.get(dept.getDeptId());
@@ -125,7 +129,8 @@ class SampleDataGenerator {
                     o.setClassSize(50);
                     o.setAvailablePlaces(50);
                     o.setYear(year++);
-                    dao.insert(o);
+                    // DB insert after enroll
+                    result.add(o);
                 }
             }
 
@@ -145,34 +150,45 @@ class SampleDataGenerator {
                     o.setClassSize(50);
                     o.setAvailablePlaces(50);
                     o.setYear(year++);
-                    dao.insert(o);
+                    // DB insert after enroll
+                    result.add(o);
                 }
             }
         }
+
+        return result;
     }
 
-    private void generateStudent() {
+    private List<Student> generateStudent() {
+        List<Student> result = new ArrayList<>(STUDENT_COUNT);
         int stuId = 15100001;
 
         for (int i = 0; i < STUDENT_COUNT; i++) {
             Student student = new Student();
-            Name name = new NameGenerator().generateName();
-            student.setStuName(name.getFirstName() + " " + name.getLastName());
-            Calendar birthday = Calendar.getInstance();
-            birthday.set(1990, 1, 2);
-            student.setDOB(birthday.getTime());
+            student.setStuName(JRand.name().gen());
+            student.setDOB(JRand.birthday().gen());
             student.setStuId(String.valueOf(stuId++));
+
             studentDao.addStudent(student);
+            result.add(student);
         }
+
+        return result;
     }
 
-    private void generateDept() {
+    private List<Department> generateDept() {
+        List<Department> result = new ArrayList<>(DEPT_LIST.length);
+
         for (int i = 0; i < DEPT_LIST.length; i++) {
             Department dept = new Department();
             dept.setDeptId(DEPT_LIST[i]);
             dept.setDeptName(DEPT_NAME_LIST[i]);
             dept.setLocation(LOCATION_LIST[0]);
+
             deptDao.addDept(dept);
+            result.add(dept);
         }
+
+        return result;
     }
 }
