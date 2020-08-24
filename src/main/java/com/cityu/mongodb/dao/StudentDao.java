@@ -69,11 +69,11 @@ public class StudentDao extends AbstractDao {
     }
 
     public void update(Student student) {
-        Update update = new Update().set("stuName", student.getStuName()).set("DOB", student.getDOB());
+        Update updateStu = new Update().set("stuName", student.getStuName()).set("DOB", student.getDOB());
+        dao.updateFirst(Query.query(Criteria.where("stuId").is(student.getStuId())), updateStu, Student.class);
 
-        dao.updateFirst(Query.query(Criteria.where("stuId").is(student.getStuId())), update, Student.class);
-
-        dao.findAndModify(Query.query(Criteria.where("student.stuId").is(student.getStuId())), update, Enrolled.class);
+        Update updateEmbedStu = new Update().set("student.stuName", student.getStuName()).set("student.DOB", student.getDOB());
+        dao.findAndModify(Query.query(Criteria.where("student.stuId").is(student.getStuId())), updateEmbedStu, Enrolled.class);
     }
 
     public void delete(String stuId) {

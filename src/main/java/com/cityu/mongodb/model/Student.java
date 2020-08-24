@@ -1,7 +1,9 @@
 package com.cityu.mongodb.model;
 
+import com.cityu.mongodb.utils.DateUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -10,7 +12,9 @@ public class Student {
     private String stuId;
 
     private String stuName;
-    @JsonFormat(pattern = "yyyy-MM-dd")
+
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date DOB;
 
     public String getStuId() {
@@ -34,6 +38,6 @@ public class Student {
     }
 
     public void setDOB(Date DOB) {
-        this.DOB = DOB;
+        this.DOB = DateUtils.getCurrentZoneDate(DOB);
     }
 }

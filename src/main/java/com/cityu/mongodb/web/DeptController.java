@@ -3,7 +3,6 @@ package com.cityu.mongodb.web;
 import com.cityu.mongodb.constants.Constants;
 import com.cityu.mongodb.constants.Message;
 import com.cityu.mongodb.dto.CourseDto;
-import com.cityu.mongodb.dto.DeptDto;
 import com.cityu.mongodb.model.Department;
 import com.cityu.mongodb.service.DeptService;
 import com.cityu.mongodb.utils.MessageUtils;

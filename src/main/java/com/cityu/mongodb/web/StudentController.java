@@ -6,7 +6,6 @@ import com.cityu.mongodb.model.Student;
 import com.cityu.mongodb.model.User;
 import com.cityu.mongodb.service.StudentService;
 import com.cityu.mongodb.utils.MessageUtils;
-import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

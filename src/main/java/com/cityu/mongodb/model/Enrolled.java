@@ -1,5 +1,7 @@
 package com.cityu.mongodb.model;
 
+import com.cityu.mongodb.utils.DateUtils;
+
 import java.util.Date;
 
 public class Enrolled {
@@ -38,6 +40,6 @@ public class Enrolled {
     }
 
     public void setEnrolDate(Date enrolDate) {
-        this.enrolDate = enrolDate;
+        this.enrolDate = DateUtils.getCurrentZoneDate(enrolDate);
     }
 }
