@@ -3,11 +3,13 @@ package com.cityu.mongodb.vo;
 public class DeptCourse {
     private String deptId;
     private String deptName;
+    private String courseId;
     private String title;
     private String level;
     private Integer year;
     private Integer classSize;
     private Integer enrolledNum;
+    private Integer availablePlaces;
 
     public String getDeptId() {
         return deptId;
@@ -23,6 +25,14 @@ public class DeptCourse {
 
     public void setDeptName(String deptName) {
         this.deptName = deptName;
+    }
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
     }
 
     public String getTitle() {
@@ -63,5 +73,13 @@ public class DeptCourse {
 
     public void setEnrolledNum(Integer enrolledNum) {
         this.enrolledNum = enrolledNum;
+    }
+
+    public Integer getAvailablePlaces() {
+        return availablePlaces;
+    }
+
+    public void setAvailablePlaces(Integer availablePlaces) {
+        this.availablePlaces = availablePlaces;
     }
 }

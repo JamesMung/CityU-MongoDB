@@ -42,7 +42,7 @@ public class DeptDto {
     }
 
     public boolean isValid () {
-        return StringUtils.isEmpty(newDeptId) && StringUtils.isEmpty(deptName) && StringUtils.isEmpty(location);
+        return !StringUtils.isEmpty(newDeptId) && !StringUtils.isEmpty(deptName) && !StringUtils.isEmpty(location);
     }
 
     public Department applyToDept() {

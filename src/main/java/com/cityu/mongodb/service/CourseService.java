@@ -50,6 +50,8 @@ public class CourseService {
                     d.setDeptId(offer.getDept().getDeptId());
                     d.setDeptName(offer.getDept().getDeptName());
                     d.setYear(offer.getYear());
+                    d.setAvailablePlaces(offer.getAvailablePlaces());
+                    d.setCourseId(offer.getCourse().getCourseId());
                     d.setTitle(offer.getCourse().getTitle());
                     d.setLevel(offer.getCourse().getLevel());
                     d.setEnrolledNum(offer.getClassSize()-offer.getAvailablePlaces());
