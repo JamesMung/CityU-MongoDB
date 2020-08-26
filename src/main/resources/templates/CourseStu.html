@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="~{layout/_layout_stu}">
+<head>
+    <title>Course</title>
+    <!-- Custom and plugin javascript -->
+    <script th:src="@{../js/course_stu.js?v=0.1.1}"></script>
+</head>
+<body>
+<div layout:fragment="header_content" class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>
+            Course
+        </h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a>Managment</a>
+            </li>
+            <li class="active breadcrumb-item">
+                <strong>Course</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div layout:fragment="content" class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>Course Information</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <table id="resultstb" class="footable table" data-empty="No Records Found" data-sorting="true" data-paging="true" data-page-size="15"></table>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

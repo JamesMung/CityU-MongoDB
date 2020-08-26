@@ -67,7 +67,7 @@ $(function () {
                         });
                     }
                 }
-            });
+            }).pageSize(100);
 
         $("#btndeptadd").on("click", function (e) {
             e.preventDefault();
