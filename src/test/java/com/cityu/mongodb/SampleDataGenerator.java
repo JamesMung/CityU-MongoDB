@@ -1,4 +1,4 @@
-/*
+
 package com.cityu.mongodb;
 
 import com.cityu.mongodb.constants.Constants;
@@ -193,4 +193,4 @@ class SampleDataGenerator {
         return result;
     }
 }
-*/
+

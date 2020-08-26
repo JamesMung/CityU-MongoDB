@@ -31,7 +31,7 @@ $(function () {
             enabled: true,
             "position": "right"
         }
-    });
+    }).pageSize(100);
 
     $.getJSON("/course/list", function(data){
         _data = data.content;
@@ -116,7 +116,7 @@ $(function () {
                     });
                 }
             }
-        });
+        }).pageSize(100);
 
         function showstudentlist(e){
             e.preventDefault();

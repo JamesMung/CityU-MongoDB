@@ -4,7 +4,7 @@
 <head>
     <title>Student</title>
     <!-- Custom and plugin javascript -->
-    <script th:src="@{../js/student.js?v=0.0.9}"></script>
+    <script th:src="@{../js/student.js?v=0.10.2}"></script>
 </head>
 <body>
 <div layout:fragment="header_content" class="row wrapper border-bottom white-bg page-heading">
@@ -38,7 +38,7 @@
                         <button data-toggle="modal" class="btn btn-primary" id="btndeptadd">Add<i class="fa fa-plus-square"></i></button>
                     </div>
                     <div class="row">
-                        <table id="resultstb" class="footable table" data-empty="No Records Found" data-sorting="true" data-paging="true" data-page-size="15"></table>
+                        <table id="resultstb" class="footable table" data-empty="No Records Found" data-sorting="true" data-paging="true" data-page-size="100"></table>
                     </div>
                 </div>
             </div>

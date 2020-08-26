@@ -31,11 +31,15 @@ public class HomeController {
         return "department";
     }
 
+    /*student*/
     @GetMapping("/studentdashboard")
     public String Viewdashboard2(){
-        return "dashboard";
+        return "dashboardStu";
     }
 
-
+    @GetMapping("/studentcourse")
+    public String Viewcourse2(){
+        return "courseStu";
+    }
 
 }

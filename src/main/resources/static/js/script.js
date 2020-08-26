@@ -295,7 +295,8 @@ function Logout() {
 
             window.location = "/";
         } else {
-           swal("Error", _rtndata.msg, "error");
+           //swal("Error", _rtndata.msg, "error");
+           window.location = "/";
         }
     });
 }
