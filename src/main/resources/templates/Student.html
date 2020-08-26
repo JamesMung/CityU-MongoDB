@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="~{layout/_layout}">
+<head>
+    <title>Student</title>
+    <!-- Custom and plugin javascript -->
+    <script th:src="@{../js/student.js?v=0.0.9}"></script>
+</head>
+<body>
+<div layout:fragment="header_content" class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>
+            Student
+        </h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a>Managment</a>
+            </li>
+            <li class="active breadcrumb-item">
+                <strong>Student</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div layout:fragment="content" class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>Information</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <button data-toggle="modal" class="btn btn-primary" id="btndeptadd">Add<i class="fa fa-plus-square"></i></button>
+                    </div>
+                    <div class="row">
+                        <table id="resultstb" class="footable table" data-empty="No Records Found" data-sorting="true" data-paging="true" data-page-size="15"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Editing Modal Markup -->
+    <div id="modal-form" class="modal fade text-left" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="editor-title">Add Row</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 b-r">
+                            <form role="form" id="editor" enctype="multipart/form-data">
+                                <input type="hidden" id="origStudentID">
+                                <div class="form-group">
+                                    <label class="col-form-labe" for="txtstudentID">ID</label>
+                                    <div class=""><input type="text" id="txtstudentID" class="form-control"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label" for="txtstuName">Name</label>
+                                    <div class=""><input type="text" id="txtstuName" class="form-control"></div>
+                                </div>
+                                <div class="form-group" id="datedobdiv">
+                                    <label class="col-form-label" for="txtdob">Date of birthday</label>
+                                    <div class="input-group date">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        <input type="text" id="txtdob" class="form-control">
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-default float-right m-t-n-xs" type="button" data-dismiss="modal"><strong>Cancel</strong></button>
+                                    <button class="btn btn-sm btn-primary float-right m-t-n-xs" type="submit"><strong>Save</strong></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

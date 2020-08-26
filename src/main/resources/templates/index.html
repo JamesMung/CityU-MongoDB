@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course Enrollment System - Login</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="stylesheet" th:href="@{lib/bootstrap/dist/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{lib/font-awesome/css/fontawesome.css}" />
+    <link rel="stylesheet" th:href="@{lib/font-awesome/css/solid.css}" />
+    <link rel="stylesheet" th:href="@{lib/sweetalert/dist/sweetalert.css}" />
+    <link rel="stylesheet" th:href="@{css/animate.css}" />
+    <link rel="stylesheet" th:href="@{css/style.css}" />
+
+    <script th:src="@{lib/jquery/dist/jquery.min.js}"></script>
+    <script th:src="@{lib/Popper/popper.min.js}"></script>
+    <script th:src="@{lib/bootstrap/dist/js/bootstrap.min.js}"></script>
+    <script th:src="@{lib/sweetalert/dist/sweetalert.min.js}"></script>
+
+    <script th:src="@{js/script.js?v=0.2}"></script>
+    <script th:src="@{js/login.js?v=0.2.2}"></script>
+
+</head>
+<body class="gray-bg">
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <h3>Course Enrollment System</h3>
+            <form autocomplete="off" class="m-t" name="_loginForm">
+                <div class="form-group">
+                    <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon"><i class="fa fa-user-alt"></i></span>
+                        </div>
+                        <input class="form-control" id="loginid" name="loginid" oninvalid="this.setCustomValidity('Please input user ID or user name')" placeholder="User ID / User Name" required="required" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon"><i class="fa fa-unlock"></i></span>
+                        </div>
+                        <input class="form-control" id="password" name="password" oninvalid="this.setCustomValidity('Please input password')" placeholder="Password" required="required" type="password" value="">
+                    </div>
+                </div>
+                <div style="color:red;" >
+                    <!--顯示登入失敗訊息 -->
+                </div>
+                <button type="button" id="btnlogin" class="btn btn-primary block full-width m-b">Login</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
