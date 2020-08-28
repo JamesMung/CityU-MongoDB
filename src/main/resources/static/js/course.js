@@ -31,7 +31,9 @@ $(function () {
             enabled: true,
             "position": "right"
         }
-    }).pageSize(100);
+    });
+
+    ft2.pageSize(100);
 
     $.getJSON("/course/list", function(data){
         _data = data.content;
@@ -72,6 +74,7 @@ $(function () {
                 enabled: true,
                 allowDelete: true,
                 allowAdd: true,
+                allowEdit: false
                 alwaysShow: true,
                 allowView: false,
                 editText: '<i class= "fa fa-edit" ></i>',
@@ -109,14 +112,16 @@ $(function () {
                     }, function (isConfirm) {
                         if (isConfirm) {
                             var values = row.val();
-                            DeleteDepartment(values.deptId);
+                            DeleteCourse(values.deptId, values.courseId, values.year);
                         } else {
                             return
                         }
                     });
                 }
             }
-        }).pageSize(100);
+        });
+
+        ft.pageSize(100);
 
         function showstudentlist(e){
             e.preventDefault();
@@ -156,12 +161,13 @@ $(function () {
             e.preventDefault();
             var row = $modal.data('row');
             values = {
-                OrgID: $editor.find('#txtcourseId').val(),
-                deptId: $editor.find('#txtdeptID').val(),
-                deptName: $editor.find('#txtdept').val(),
+                deptId: $editor.find('#txtdept').val(),
                 courseId: $editor.find('#txtcourseId').val(),
-                coursetitle: $editor.find('#txtcoursetitle').val(),
-                courseId: $editor.find('#txtcourseId').val(),
+                courseTitle: $editor.find('#txtcoursetitle').val(),
+                level: $editor.find('#txtlevel').val(),
+                year: $editor.find('#actiondate').val().getFullYear(),
+                classSize: $editor.find('#txtclassSize').val().getFullYear(),
+                availablePlaces: $editor.find('#txtavailableplaces').val(),
             };
 
             swal({
@@ -176,7 +182,7 @@ $(function () {
                 closeOnCancel: true
             }, function (isConfirm) {
                 if (isConfirm) {
-                    return
+                    UpdateCourse(values)
                 } else {
                     return
                 }
@@ -184,3 +190,60 @@ $(function () {
         });
     });
 });
+
+function DeleteCourse(deptId, courseId, year){
+    var _url = "/course/delete?deptId=" + deptId + "&courseId=" + courseId + "&year=" + year;
+    var _model = "DELETE"
+
+    AjaxPost(_url, _model, undefined, function (data) {
+        var _de_data = $.parseJSON(data);
+        if (_de_data.success == true) {
+            swal({
+                title: "Updated",
+                text:  _de_data.msg,
+                type: "success",
+                showCancelButton: false,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "OK",
+                closeOnConfirm: true
+            }, function () {
+                location.reload();
+            });
+        } else {
+           swal("Error", _de_data.msg, "error");
+        }
+    });
+}
+
+function UpdateCourse(values) {
+    var _url = "/course/add";
+    var _model = "POST"
+    var fd = new FormData();
+
+    fd.append( 'deptId', values.deptId);
+    fd.append( 'courseId', values.courseId);
+    fd.append( 'title', values.courseTitle);
+    fd.append( 'level', values.level);
+    fd.append( 'year', values.year);
+    fd.append( 'classSize', values.classSize);
+    fd.append( 'availablePlaces', values.availablePlaces);
+
+    AjaxPost(_url, _model, fd, function (data) {
+        var _data = $.parseJSON(data);
+        if (_data.success == true) {
+            swal({
+                title: "Updated",
+                text:  _de_data.msg,
+                type: "success",
+                showCancelButton: false,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "OK",
+                closeOnConfirm: true
+            }, function () {
+                location.reload();
+            });
+        } else {
+           swal("Error", _data.msg, "error");
+        }
+    });
+}

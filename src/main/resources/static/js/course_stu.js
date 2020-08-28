@@ -52,6 +52,8 @@ $(function () {
             }
         });
 
+        ft.pageSize(100);
+
         function enroll(e){
              e.preventDefault();
              e.stopPropagation();
