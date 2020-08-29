@@ -16,10 +16,22 @@
                 var couserid = GetStorage("userid");
                 if(IsNull(couserid) == false){
                     RemoveStorage("userid");
+                    RemoveStorage("username");
                     RemoveStorage("userrole");
                 }
 
+                var tempdata = _rtndata.content;
+                var datausername = tempdata.username;
+                var student_data = tempdata.student;
+
+                if(IsNull(student_data) == false){
+                    SaveStorage("username", student_data.stuName);
+                }else{
+                    SaveStorage("username", datausername);
+                }
+
                 SaveStorage("userid", _username);
+
                 if(_username == "admin"){
                     SaveStorage("userrole", "Admin");
                     window.location = "/home/dashboard";

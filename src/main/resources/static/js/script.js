@@ -213,12 +213,20 @@ $(document).ready(function () {
 
     //handle menu
     if ($("#menuname").length){
-        var couserid = GetStorage("userid");
-        if(IsNull(couserid) == false){
-            $("#menuname").text(couserid);
+        var cousername = GetStorage("username");
+        if(IsNull(cousername) == false){
+            $("#menuname").text(cousername);
         }
     }
 });
+
+$.urlParam = function(name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null) {
+       return null;
+    }
+    return decodeURI(results[1]) || 0;
+}
 
 // check if browser support HTML5 local storage
 function localStorageSupport() {
@@ -290,6 +298,7 @@ function Logout() {
             var couserid = GetStorage("userid");
             if(IsNull(couserid) == false){
                 RemoveStorage("userid");
+                RemoveStorage("username");
                 RemoveStorage("userrole");
             }
 
@@ -340,7 +349,7 @@ function AjaxPost(url, model, args, success) {
     }).done(function (data) {
         success(data);
     }).fail(function () {
-        swal('提示', '上傳失敗', 'error');
+        swal('Alert', 'server response fail', 'error');
     })
 }
 //#endregion
@@ -408,6 +417,11 @@ function StringToHtmlyyyymmdd(s) {
 function StringToHtmlyyyymmdd2(s) {
     var ss = s.toString();
     return ss.substring(6, 10) + ss.substring(0, 2) + ss.substring(3, 5);
+}
+
+function StringToHtmlyyyymmdd3(s) {
+    var ss = s.toString();
+    return ss.substring(6, 10) + "-" + ss.substring(0, 2) + "-" + ss.substring(3, 5);
 }
 
 function DateToHtmlDate(d) {

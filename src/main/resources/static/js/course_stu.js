@@ -13,7 +13,6 @@ $(document).ready(function () {
 
 
 $(function () {
-
     $.getJSON("/course/list", function(data){
         _data = data.content;
         var ft = FooTable.init('#resultstb', {

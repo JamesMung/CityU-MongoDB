@@ -37,9 +37,32 @@ public class HomeController {
         return "dashboardStu";
     }
 
-    @GetMapping("/studentcourse")
-    public String Viewcourse2(){
-        return "courseStu";
+    @GetMapping("/studentenroll")
+    public String Viewstudentenroll(){
+        return "StudentEnroll";
     }
+
+    @GetMapping("/studentunenroll")
+    public String Viewstudentunenroll(){
+        return "StudentUnenroll";
+    }
+
+    /* Report */
+    @GetMapping("/courseenrolled")
+    public String Viewcourseenrolled(){
+        return "courseenrolled";
+    }
+
+    @GetMapping("/offerstat")
+    public String Viewofferstat(){
+        return "offerstat";
+    }
+
+    @GetMapping("/enrollstat")
+    public String Viewenrollstat(){
+        return "enrollstat";
+    }
+
+
 
 }

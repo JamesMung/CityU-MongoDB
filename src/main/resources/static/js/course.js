@@ -1,6 +1,7 @@
 ﻿var _data = [];
 var _deptdata = [];
 var currentTime = new Date();
+var _firstload = true;
 
 $(document).ready(function () {
     $.getJSON("/dept/list", function(data){
@@ -8,7 +9,12 @@ $(document).ready(function () {
         $.each(_deptdata, function (i, item) {
             var option = $("<option/>").data("deptdataset", item).val(item.deptId).text(item.deptId + " - " + item.deptName);
             $('#txtdept').append(option);
+            $('#txtsearchdept').append(option);
+
         });
+
+        var _tempdept = $.urlParam('dept');
+        if (IsNull(_tempdept) == false){ $('#txtsearchdept').val(_tempdept);  }
     });
 
     $('#txtyeardiv .input-group.date').datepicker({
@@ -17,6 +23,13 @@ $(document).ready(function () {
         minViewMode: "years",
         autoclose: true
     }).datepicker("setDate", currentTime);
+
+    $('#txtsearchyeardiv .input-group.date').datepicker({
+        format: "yyyy",
+        viewMode: "years",
+        minViewMode: "years",
+        autoclose: true
+    });
 });
 
 
@@ -35,7 +48,26 @@ $(function () {
 
     ft2.pageSize(100);
 
-    $.getJSON("/course/list", function(data){
+    var _url = "/course/search";
+    var _filter = "";
+    if(_firstload == true){
+        var _querydept = $.urlParam('dept');
+        var _querycourse = $.urlParam('course');
+        var _querylevel = $.urlParam('level');
+        var _queryyear = $.urlParam('year');
+
+        if (IsNull(_querydept) == false){ _filter += "&deptId=" + _querydept;  }
+        if (IsNull(_querycourse) == false){ _filter += "&courseId=" + _querycourse;  }
+        if (IsNull(_querylevel) == false){ _filter += "&level=" + _querylevel;  }
+        if (IsNull(_queryyear) == false){ _filter += "&year=" + _queryyear;  }
+
+        if (!IsNull(_filter)) {
+            _url += "?" + _filter.substring(1, _filter.length)
+        }
+        _firstload = false;
+    }
+
+    $.getJSON(_url, function(data){
         _data = data.content;
         var $modal = $('#modal-form'),
             $studentlist = $('#modal-studentform'),
@@ -133,7 +165,7 @@ $(function () {
                 var _coursedata = data.content;
                 var _studentdata = [];
                 $.each(_coursedata, function (i, item) {
-                   _studentdata.append(item.student)
+                   _studentdata[i] = item.student;
                 });
                 ft2.rows.load(_studentdata);
                 $studentlist.modal('show');
@@ -155,6 +187,29 @@ $(function () {
             $modal.modal('show');
         });
 
+        $("#btnsearch").on("click", function (e) {
+            e.preventDefault();
+            var _searchurl = "/course/search";
+            _querydept = $('#txtsearchdept').val();
+            _querycourse = $('#txtsearchcourse').val();
+            _querylevel = $('#txtsearchlevel').val();
+            _queryyear = $('#txtsearchyear').val();
+            _filter = "";
+
+            if (IsNull(_querydept) == false){ _filter += "&deptId=" + _querydept;  }
+            if (IsNull(_querycourse) == false){ _filter += "&courseId=" + _querycourse;  }
+            if (IsNull(_querylevel) == false){ _filter += "&level=" + _querylevel;  }
+            if (IsNull(_queryyear) == false){ _filter += "&year=" + _queryyear;  }
+
+            if (!IsNull(_filter)) {
+                _searchurl += "?" + _filter.substring(1, _filter.length)
+            }
+
+            $.getJSON(_searchurl, function(data){
+                var _coursedata = data.content;
+                ft.rows.load(_coursedata);
+            });
+        });
 
         $editor.on('submit', function (e) {
             if (this.checkValidity && !this.checkValidity()) return;

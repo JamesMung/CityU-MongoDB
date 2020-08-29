@@ -8,7 +8,17 @@ $(function () {
             $editorTitle = $('#editor-title'),
             ft = FooTable.init('#resultstb', {
             "columns": [
-                { "name": "deptId", "title": "ID" },
+                //{ "name": "deptId", "title": "ID" },
+                { "name": "deptId",
+                "title": "ID",
+                "type":"text",
+                "formatter": function (value) {
+                    var actions = $('<div/>').append();
+                    var user_button = $('<a/>').text(value).attr("href", "/home/course?dept=" + value).appendTo(actions);
+
+                    return actions;
+                }
+                },
                 { "name": "deptName", "title": "Name" },
                 { "name": "location", "title": "Location" },
                 { "name": "valid", "title": "valid", "visible":false }
@@ -141,11 +151,8 @@ function UpdateDepartment(values) {
     if( IsNull(values.OrgID) == false){
         _url = "/dept/update";
         _model = "PUT";
-        fd.append( 'origDeptId', values.OrgID);
-        fd.append( 'newDeptId', values.deptId);
-    }else{
-        fd.append( 'deptId', values.deptId);
     }
+    fd.append( 'deptId', values.deptId);
     fd.append( 'deptName', values.deptName);
     fd.append( 'location', values.location);
 

@@ -4,7 +4,7 @@
 <head>
     <title>Student</title>
     <!-- Custom and plugin javascript -->
-    <script th:src="@{../js/student.js?v=0.10.2}"></script>
+    <script th:src="@{../js/student.js?v=0.10.4}"></script>
 </head>
 <body>
 <div layout:fragment="header_content" class="row wrapper border-bottom white-bg page-heading">
@@ -83,6 +83,27 @@
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Course List Modal Markup -->
+    <div id="modal-courseform" class="modal fade text-left" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="studentlist">Enrolled Student List</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 b-r">
+                            <table id="resultstb2" class="footable table" data-empty="No Records Found" data-sorting="true" data-paging="true" data-page-size="15"></table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default float-right m-t-n-xs" type="button" data-dismiss="modal"><strong>Cancel</strong></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
