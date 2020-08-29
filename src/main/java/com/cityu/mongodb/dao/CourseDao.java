@@ -22,14 +22,6 @@ public class CourseDao extends AbstractDao {
         return dao.find(Query.query(c), Enrolled.class);
     }
 
-    public List<Enrolled> getEnrolledList(String courId, Integer year) {
-        Criteria c = new Criteria();
-        if (!StringUtils.isEmpty(courId)) c.and("course.courseId").is(courId);
-        if (year != null) c.and("year").is(year);
-
-        return dao.find(Query.query(c), Enrolled.class);
-    }
-
     public List<Offer> findOfferedCourse(SearchCriteria criteria) {
         if (criteria == null) {
             return dao.findAll(Offer.class);
@@ -37,7 +29,7 @@ public class CourseDao extends AbstractDao {
             Criteria c = new Criteria();
             if (!StringUtils.isEmpty(criteria.getCourseId())) c.and("course.courseId").is(criteria.getCourseId());
             if (!StringUtils.isEmpty(criteria.getDeptId())) c.and("dept.deptId").is(criteria.getDeptId());
-            if (!StringUtils.isEmpty(criteria.getLevel())) c.and("course.level").is(criteria.getYear());
+            if (!StringUtils.isEmpty(criteria.getLevel())) c.and("course.level").is(criteria.getLevel());
             if (criteria.getYear() != null) c.and("year").is(criteria.getYear());
 
             return dao.find(Query.query(c), Offer.class);
@@ -69,20 +61,33 @@ public class CourseDao extends AbstractDao {
         return true;
     }
 
-    public List<Enrolled> getEnrolledList(Student student) {
-        return dao.find(Query.query(Criteria.where("student.stuId").is(student.getStuId())), Enrolled.class);
+    public List<Enrolled> getEnrolledList(Student student, SearchCriteria criteria) {
+        Criteria c = new Criteria();
+        if (student != null) c.and("student.stuId").is(student.getStuId());
+        if (!StringUtils.isEmpty(criteria.getCourseId())) c.and("course.courseId").is(criteria.getCourseId());
+        if (!StringUtils.isEmpty(criteria.getLevel())) c.and("course.level").is(criteria.getYear());
+        if (criteria.getYear() != null) c.and("year").is(criteria.getYear());
+
+        return dao.find(Query.query(c), Enrolled.class);
+    }
+
+    public Offer getOfferedByEnrolled(Enrolled enrolled) {
+        return dao.findOne(Query.query(Criteria.where("course.courseId").is(enrolled.getCourse().getCourseId()).and("year").is(enrolled.getYear())), Offer.class);
     }
 
     public List<Offer> getUnEnrolledCourses(Student student, SearchCriteria criteria) {
-        List<String> enrolledIds = getEnrolledList(student).stream().map(e -> e.getCourse().getCourseId()).collect(Collectors.toList());
+        List<String> enrolledIds = getEnrolledList(student, criteria).stream().map(e -> e.getCourse().getCourseId()).collect(Collectors.toList());
 
-        Criteria c = new Criteria();
-        c.and("course.courseId").nin(enrolledIds);
+        Criteria c = Criteria.where("course.courseId").nin(enrolledIds);
         if (!StringUtils.isEmpty(criteria.getCourseId())) c.and("course.courseId").is(criteria.getCourseId());
         if (!StringUtils.isEmpty(criteria.getDeptId())) c.and("dept.deptId").is(criteria.getDeptId());
         if (!StringUtils.isEmpty(criteria.getLevel())) c.and("course.level").is(criteria.getYear());
         if (criteria.getYear() != null) c.and("year").is(criteria.getYear());
 
         return dao.find(Query.query(c), Offer.class);
+    }
+
+    public List<Course> getCourseList() {
+        return dao.findAll(Course.class);
     }
 }

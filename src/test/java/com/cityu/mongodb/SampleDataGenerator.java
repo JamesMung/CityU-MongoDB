@@ -25,7 +25,7 @@ class SampleDataGenerator {
     @Autowired
     private MongoTemplate dao;
 
-    private static final int STUDENT_COUNT = 999;
+    private static final int STUDENT_COUNT = 499;
     private static final String[] DEPT_LIST = {"BE", "CS", "EE", "ME", "IS"};
     private static final String[] DEPT_NAME_LIST = {"Biomedical Engineering", "Computer Science", "Electrical Engineering", "Mechanical Engineering", "Information Systems"};
     private static final String[] LOCATION_LIST = {"Yeung Kin Man Academic Building"};
@@ -59,7 +59,7 @@ class SampleDataGenerator {
     private void insertAdmin() {
         User u = new User();
         u.setId(0);
-        u.setUsername("Admin");
+        u.setUsername("admin");
         u.setPassword(Constants.DEFAULT_PWD);
         u.setRole(Constants.UserRole.ADMIN);
 

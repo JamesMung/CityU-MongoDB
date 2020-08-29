@@ -32,7 +32,7 @@ public class UserController {
 
             if (u != null) {
                 session.setAttribute(Constants.LOGIN_USER, u);
-                return MessageUtils.returnSuccessMsg(Constants.Message.LOGIN_SUCCEED);
+                return MessageUtils.returnSuccessMsgWithContent(u, Constants.Message.LOGIN_SUCCEED);
             } else {
                 return MessageUtils.returnErrorMsg(Constants.Message.LOGIN_FAILED);
             }

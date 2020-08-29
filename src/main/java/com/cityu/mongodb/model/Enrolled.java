@@ -7,7 +7,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 public class Enrolled {
-
     private Student student;
     private Integer year;
     private Course course;

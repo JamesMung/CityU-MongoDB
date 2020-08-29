@@ -3,7 +3,9 @@ package com.cityu.mongodb.service;
 import com.cityu.mongodb.dao.CourseDao;
 import com.cityu.mongodb.dao.StudentDao;
 import com.cityu.mongodb.dto.CourseDto;
+import com.cityu.mongodb.model.Course;
 import com.cityu.mongodb.model.Enrolled;
+import com.cityu.mongodb.model.Offer;
 import com.cityu.mongodb.model.Student;
 import com.cityu.mongodb.query.SearchCriteria;
 import com.cityu.mongodb.vo.CourseStatistics;
@@ -15,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,8 +59,8 @@ public class CourseService {
         return result;
     }
 
-    public List<DeptCourse> getAllList() {
-        return searchCourse(null);
+    public List<Course> getAllList() {
+        return courseDao.getCourseList();
     }
 
     public boolean addCourse(CourseDto courDto) {
@@ -67,7 +68,10 @@ public class CourseService {
     }
 
     public List<Enrolled> getEnrolledStudents(String courId, Integer year) {
-        return courseDao.getEnrolledList(courId, year);
+        SearchCriteria criteria = new SearchCriteria();
+        criteria.setCourseId(courId);
+        criteria.setYear(year);
+        return courseDao.getEnrolledList(null, criteria);
     }
 
     public List<DeptCourse> searchCourse(SearchCriteria criteria) {
@@ -88,8 +92,24 @@ public class CourseService {
                 }).collect(Collectors.toList());
     }
 
-    public List<Enrolled> getEnrolledCourses(Student student) {
-        return courseDao.getEnrolledList(student);
+    public List<DeptCourse> getEnrolledCourses(Student student, SearchCriteria criteria) {
+        return courseDao.getEnrolledList(student,criteria).stream()
+                .map(enrolled -> {
+                    DeptCourse d = new DeptCourse();
+                    Offer offer = courseDao.getOfferedByEnrolled(enrolled);
+
+                    d.setDeptId(offer.getDept().getDeptId());
+                    d.setDeptName(offer.getDept().getDeptName());
+                    d.setYear(enrolled.getYear());
+                    d.setAvailablePlaces(offer.getAvailablePlaces());
+                    d.setCourseId(enrolled.getCourse().getCourseId());
+                    d.setTitle(enrolled.getCourse().getTitle());
+                    d.setLevel(enrolled.getCourse().getLevel());
+                    d.setEnrolledNum(offer.getClassSize()-offer.getAvailablePlaces());
+                    d.setClassSize(offer.getClassSize());
+
+                    return d;
+                }).collect(Collectors.toList());
     }
 
     public List<DeptCourse> getUnEnrolledCourses(Student student, SearchCriteria criteria) {
@@ -128,7 +148,7 @@ public class CourseService {
     public List<EnrolledStatistics> getEnrolledStatistic() {
         List<EnrolledStatistics> result = new ArrayList<>();
 
-        courseDao.getEnrolledList(null, null)
+        courseDao.getEnrolledList(null, new SearchCriteria())
                 .stream().collect(Collectors.groupingBy(e -> e.getYear()))
                 .forEach((year, list) -> {
                     EnrolledStatistics es = new EnrolledStatistics();

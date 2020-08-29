@@ -54,7 +54,7 @@ public class StudentController {
 
     @GetMapping("/enrolledList")
     @ResponseBody
-    public Message getEnrolledList(HttpSession session) {
+    public Message getEnrolledList(HttpSession session, SearchCriteria criteria) {
         User u = (User)session.getAttribute(Constants.LOGIN_USER);
         if(u == null) {
             return MessageUtils.returnErrorMsg(Constants.Message.NO_USER_LOGIN);
@@ -62,7 +62,7 @@ public class StudentController {
             return MessageUtils.returnErrorMsg(Constants.Message.NO_ENROLL_PERMISSION);
         }
 
-        return MessageUtils.returnSuccessMsgWithContent(courseService.getEnrolledCourses(u.getStudent()), Constants.Message.QUERY_SUCCESS);
+        return MessageUtils.returnSuccessMsgWithContent(courseService.getEnrolledCourses(u.getStudent(), criteria), Constants.Message.QUERY_SUCCESS);
     }
 
     @DeleteMapping("/unEnroll")
@@ -85,7 +85,7 @@ public class StudentController {
 
     @GetMapping("/unEnrollList")
     @ResponseBody
-    public Message getEnrollCourseList(HttpSession session, SearchCriteria criteria) {
+    public Message getUnEnrollCourseList(HttpSession session, SearchCriteria criteria) {
         User u = (User)session.getAttribute(Constants.LOGIN_USER);
         if(u == null) {
             return MessageUtils.returnErrorMsg(Constants.Message.NO_USER_LOGIN);
