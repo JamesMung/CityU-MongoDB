@@ -1,6 +1,15 @@
+
 var currentTime = new Date();
+var _deptdata = [];
 
 $(document).ready(function () {
+    $('#txtsearchyeardiv .input-group.date').datepicker({
+        format: "yyyy",
+        viewMode: "years",
+        minViewMode: "years",
+        autoclose: true
+    });
+
     $.getJSON("/dept/list", function(data){
         _deptdata = data.content;
         $.each(_deptdata, function (i, item) {
@@ -8,30 +17,15 @@ $(document).ready(function () {
             $('#txtsearchdept').append(option);
         });
     });
-
-    $('#txtyeardiv .input-group.date').datepicker({
-        format: "yyyy",
-        viewMode: "years",
-        minViewMode: "years",
-        autoclose: true
-    }).datepicker("setDate", currentTime);
-
-    $('#txtsearchyeardiv .input-group.date').datepicker({
-        format: "yyyy",
-        viewMode: "years",
-        minViewMode: "years",
-        autoclose: true
-    }).datepicker("setDate", currentTime);
 });
 
+
 $(function () {
-    var _url = "/student/enrolledList?year=2020";
+    var _url = "/student/enrolledList";
 
     $.getJSON(_url, function(data){
         _data = data.content;
         var $modal = $('#modal-form'),
-            $editor = $('#editor'),
-            $editorTitle = $('#editor-title'),
             ft = FooTable.init('#resultstb', {
             "columns": [
                 { "name": "deptId", "title": "Dept. ID", "visible":false },
@@ -86,30 +80,31 @@ $(function () {
             var _model = "DELETE";
 
             AjaxPost(_url, _model, undefined, function (data) {
-            var _rtndata = $.parseJSON(data);
+                var _rtndata = $.parseJSON(data);
 
-            if (_rtndata.success == true) {
-                swal({
-                    title: "Alert",
-                    text: "unEnroll Successful",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes",
-                    cancelButtonText: "No",
-                    closeOnConfirm: true,
-                    closeOnCancel: true
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        location.reload();
-                    } else {
-                        location.reload();
-                    }
-                });
-            } else {
-                swal("Error", _rtndata.msg, "error");
-            }
+                if (_rtndata.success == true) {
+                    swal({
+                        title: "Alert",
+                        text: "unEnroll Successful",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Yes",
+                        cancelButtonText: "No",
+                        closeOnConfirm: true,
+                        closeOnCancel: true
+                    }, function (isConfirm) {
+                        if (isConfirm) {
+                            location.reload();
+                        } else {
+                            location.reload();
+                        }
+                    });
+                } else {
+                    swal("Error", _rtndata.msg, "error");
+                }
             });
+        }
 
         $("#btnsearch").on("click", function (e) {
             e.preventDefault();
@@ -136,4 +131,5 @@ $(function () {
         });
 
     });
+
 });
