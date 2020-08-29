@@ -1,30 +1,47 @@
 package com.cityu.mongodb.dao;
 
 import com.cityu.mongodb.dto.CourseDto;
-import com.cityu.mongodb.model.Course;
-import com.cityu.mongodb.model.Department;
-import com.cityu.mongodb.model.Enrolled;
-import com.cityu.mongodb.model.Offer;
+import com.cityu.mongodb.model.*;
+import com.cityu.mongodb.query.SearchCriteria;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class CourseDao extends AbstractDao {
 
-    public List<Enrolled> getCourEnrolledList() {
-        return dao.findAll(Enrolled.class);
+    public List<Enrolled> getCourEnrolledList(Integer year) {
+        Criteria c = new Criteria();
+        if (year != null) c.and("year").is(year);
+
+        return dao.find(Query.query(c), Enrolled.class);
     }
 
     public List<Enrolled> getEnrolledList(String courId, Integer year) {
-        return dao.find(Query.query(Criteria.where("course.courId").is(courId).and("year").is(year)), Enrolled.class);
+        Criteria c = new Criteria();
+        if (!StringUtils.isEmpty(courId)) c.and("course.courseId").is(courId);
+        if (year != null) c.and("year").is(year);
+
+        return dao.find(Query.query(c), Enrolled.class);
     }
 
-    public List<Offer> findOfferedCourse() {
-        return dao.findAll(Offer.class);
+    public List<Offer> findOfferedCourse(SearchCriteria criteria) {
+        if (criteria == null) {
+            return dao.findAll(Offer.class);
+        } else {
+            Criteria c = new Criteria();
+            if (!StringUtils.isEmpty(criteria.getCourseId())) c.and("course.courseId").is(criteria.getCourseId());
+            if (!StringUtils.isEmpty(criteria.getDeptId())) c.and("dept.deptId").is(criteria.getDeptId());
+            if (!StringUtils.isEmpty(criteria.getLevel())) c.and("course.level").is(criteria.getYear());
+            if (criteria.getYear() != null) c.and("year").is(criteria.getYear());
+
+            return dao.find(Query.query(c), Offer.class);
+        }
     }
 
     @Transactional
@@ -50,5 +67,22 @@ public class CourseDao extends AbstractDao {
         dao.insert(offer);
 
         return true;
+    }
+
+    public List<Enrolled> getEnrolledList(Student student) {
+        return dao.find(Query.query(Criteria.where("student.stuId").is(student.getStuId())), Enrolled.class);
+    }
+
+    public List<Offer> getUnEnrolledCourses(Student student, SearchCriteria criteria) {
+        List<String> enrolledIds = getEnrolledList(student).stream().map(e -> e.getCourse().getCourseId()).collect(Collectors.toList());
+
+        Criteria c = new Criteria();
+        c.and("course.courseId").nin(enrolledIds);
+        if (!StringUtils.isEmpty(criteria.getCourseId())) c.and("course.courseId").is(criteria.getCourseId());
+        if (!StringUtils.isEmpty(criteria.getDeptId())) c.and("dept.deptId").is(criteria.getDeptId());
+        if (!StringUtils.isEmpty(criteria.getLevel())) c.and("course.level").is(criteria.getYear());
+        if (criteria.getYear() != null) c.and("year").is(criteria.getYear());
+
+        return dao.find(Query.query(c), Offer.class);
     }
 }

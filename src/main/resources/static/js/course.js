@@ -74,7 +74,7 @@ $(function () {
                 enabled: true,
                 allowDelete: true,
                 allowAdd: true,
-                allowEdit: false
+                allowEdit: false,
                 alwaysShow: true,
                 allowView: false,
                 editText: '<i class= "fa fa-edit" ></i>',

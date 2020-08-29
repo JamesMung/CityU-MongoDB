@@ -30,18 +30,12 @@ public class StudentService {
         studentDao.addStudent(student);
     }
 
-    public boolean enrollCourse(User u, String courseId, Integer year) {
-        if(u.getStudent() == null)
-            return false;
-
-        return studentDao.enrollCourse(u, courseId, year);
+    public boolean enrollCourse(Student student, String courseId, Integer year) {
+        return studentDao.enrollCourse(student, courseId, year);
     }
 
-    public boolean unEnrollCourse(User u, String courseId, Integer year) {
-        if(u.getStudent() == null)
-            return false;
-
-        return studentDao.unEnrollCourse(u, courseId, year);
+    public boolean unEnrollCourse(Student student, String courseId, Integer year) {
+        return studentDao.unEnrollCourse(student, courseId, year);
     }
 
     public void update(Student student) {

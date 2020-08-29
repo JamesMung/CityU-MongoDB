@@ -4,6 +4,8 @@ import com.cityu.mongodb.constants.Constants;
 import com.cityu.mongodb.constants.Message;
 import com.cityu.mongodb.model.Student;
 import com.cityu.mongodb.model.User;
+import com.cityu.mongodb.query.SearchCriteria;
+import com.cityu.mongodb.service.CourseService;
 import com.cityu.mongodb.service.StudentService;
 import com.cityu.mongodb.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpSession;
 public class StudentController {
 
     private StudentService studentService;
+    private CourseService courseService;
 
     @GetMapping("/list")
     @ResponseBody
@@ -43,10 +46,23 @@ public class StudentController {
             return MessageUtils.returnErrorMsg(Constants.Message.MANDATORY_FIELD, "Year");
         }
 
-        boolean succeed = studentService.enrollCourse(u, courseId, year);
+        boolean succeed = studentService.enrollCourse(u.getStudent(), courseId, year);
 
         return succeed ? MessageUtils.returnSuccessMsg(Constants.Message.ENROLL_SUCCEED) :
             MessageUtils.returnErrorMsg(Constants.Message.ENROLL_FAILED);
+    }
+
+    @GetMapping("/enrolledList")
+    @ResponseBody
+    public Message getEnrolledList(HttpSession session) {
+        User u = (User)session.getAttribute(Constants.LOGIN_USER);
+        if(u == null) {
+            return MessageUtils.returnErrorMsg(Constants.Message.NO_USER_LOGIN);
+        } else if(Constants.UserRole.ADMIN.equals(u.getRole())) {
+            return MessageUtils.returnErrorMsg(Constants.Message.NO_ENROLL_PERMISSION);
+        }
+
+        return MessageUtils.returnSuccessMsgWithContent(courseService.getEnrolledCourses(u.getStudent()), Constants.Message.QUERY_SUCCESS);
     }
 
     @DeleteMapping("/unEnroll")
@@ -61,10 +77,23 @@ public class StudentController {
             return MessageUtils.returnErrorMsg(Constants.Message.MANDATORY_FIELD, "Year");
         }
 
-        boolean succeed = studentService.unEnrollCourse(u, courseId, year);
+        boolean succeed = studentService.unEnrollCourse(u.getStudent(), courseId, year);
 
         return succeed ? MessageUtils.returnSuccessMsg(Constants.Message.UNENROLL_SUCCEED) :
                 MessageUtils.returnErrorMsg(Constants.Message.UNENROLL_FAILED);
+    }
+
+    @GetMapping("/unEnrollList")
+    @ResponseBody
+    public Message getEnrollCourseList(HttpSession session, SearchCriteria criteria) {
+        User u = (User)session.getAttribute(Constants.LOGIN_USER);
+        if(u == null) {
+            return MessageUtils.returnErrorMsg(Constants.Message.NO_USER_LOGIN);
+        } else if(Constants.UserRole.ADMIN.equals(u.getRole())) {
+            return MessageUtils.returnErrorMsg(Constants.Message.NO_ENROLL_PERMISSION);
+        }
+
+        return MessageUtils.returnSuccessMsgWithContent(courseService.getUnEnrolledCourses(u.getStudent(), criteria), Constants.Message.QUERY_SUCCESS);
     }
 
     @PutMapping("/update")
@@ -88,5 +117,14 @@ public class StudentController {
     @Autowired
     public void setStudentService(StudentService studentService) {
         this.studentService = studentService;
+    }
+
+    public CourseService getCourseService() {
+        return courseService;
+    }
+
+    @Autowired
+    public void setCourseService(CourseService courseService) {
+        this.courseService = courseService;
     }
 }

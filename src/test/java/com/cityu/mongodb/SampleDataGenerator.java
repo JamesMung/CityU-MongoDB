@@ -25,23 +25,23 @@ class SampleDataGenerator {
     @Autowired
     private MongoTemplate dao;
 
-    private static final int STUDENT_COUNT = 1000;
-    private static final String[] DEPT_LIST = {"BE", "CS", "EE", "ME", "SEEM"};
-    private static final String[] DEPT_NAME_LIST = {"Biomedical Engineering", "Computer Science", "Electrical Engineering", "Mechanical Engineering", "Systems Engineering and Engineering Management"};
+    private static final int STUDENT_COUNT = 999;
+    private static final String[] DEPT_LIST = {"BE", "CS", "EE", "ME", "IS"};
+    private static final String[] DEPT_NAME_LIST = {"Biomedical Engineering", "Computer Science", "Electrical Engineering", "Mechanical Engineering", "Information Systems"};
     private static final String[] LOCATION_LIST = {"Yeung Kin Man Academic Building"};
     private static final Map<String, List<String>> L5_COURSE_MAPPING = ImmutableMap.<String, List<String>>builder()
-            .put("BE", Arrays.asList("Artificial Intelligence in Biomedical Engineering", "Engineering Mathematics", "Electronic Circuits", "Thermo and Fluid Dynamics", "Biomechanics", "Biomaterials", "Electromagnetics", "Engineering Graphics", "Engineering Computing", "Medical Biotechnology in Imaging and Measurement", "Biomedical Signals and Systems", "Micro and Nanotechnology", "Computational Biology and Bioinformatics", "Biomedical Instrumentation", "Bio-sensors and Bio-devices", "Biomedical Systems and Control", "Consumer Mechatronics", "Robotics and Machine Vision", "Molecules and Cells", "Cell Transport and Signalling", "Tissue Engineering", "Regenerative Medicine", "Gene Therapy", "Human Quantitative Physiology", "Health Maintenance and Wellness Technology", "Bio-safety and Security", "Technology for Drug Discovery", "Radiotherapy Physics"))
-            .put("CS", Arrays.asList("Computer Organization", "Operating Systems", "Computer Network", "Data Structures", "Algorithm Design Techniques", "Software Design", "Database Design and Management"))
-            .put("EE", Arrays.asList("Foundations of Digital Techniques", "Principles of Electronic Engineering", "Introduction to Electronic Design", "Logic Circuit Design", "Microcomputer Systems", "Electronic Devices and Circuits", "Introduction to Electromagnetics", "Computational Engineering Analysis", "Principles of Communications", "Engineers in Society", "Design Project", "Communication Engineering", "Applied Electromagnetics", "Systems & Control", "Applied Optoelectronic Devices", "Differential Equations for Electrical Engineering", "Analogue Circuit Fundamentals", "Introduction to Electric Power Systems", "Introduction to Electric Machines and Drives", "Signals and Systems", "Project", "Engineering Training I", "Engineering Training II", "Multi-variable Calculus and Linear Algebra"))
-            .put("ME", Arrays.asList("Engineering Materials", "Basic Electronic Engineering", "Engineering Drawing", "Engineering Analysis", "Electronics", "Control Principles", "Mechanical Design", "Microprocessor Applications", "Industrial Automation"))
-            .put("SEEM", Arrays.asList("Introduction to Systems Engineering and Management", "Data Analytics and Statistical Methods", "Engineering Economic Analysis", "Ergonomics in Workplace Design", "Logistics and Materials Management", "Operations and Logistics Planning", "Work Design", "Engineering Database and Systems", "Quality Improvement Methodologies", "Operations Research", "Quality Engineering", "Process Analysis and Design", "Operations and Logistics Engineering Workshop", "Professional Engineering Practice", "Product and Service Design and Innovation"))
+            .put("BE", Arrays.asList("Artificial Intelligence in Biomedical Engineering", "Engineering Mathematics"))
+            .put("CS", Arrays.asList("Computer Organization", "Operating Systems", "Computer Network"))
+            .put("EE", Arrays.asList("Foundations of Digital Techniques", "Principles of Electronic Engineering"))
+            .put("ME", Arrays.asList("Engineering Materials", "Basic Electronic Engineering"))
+            .put("IS", Arrays.asList("Data Management", "Systems Analysis and Design"))
             .build();
     private static final Map<String, List<String>> L6_COURSE_MAPPING = ImmutableMap.<String, List<String>>builder()
-            .put("BE", Arrays.asList("Micro Systems Technology", "Manufacturing of Biomedical Devices", "Biomedical Instrumentation", "Biomechanics", "Biomedical Engineering Design", "Biomedical Safety and Risk Assessment", "Human Machine Interface", "Biomedical Engineering Design", "Regenerative Medicine", "Dissertation", "Project Development Study", "Industrial Case Study", "Mechanical Behaviour of Materials: From Metallic to Biomedical/ Biological Materials", "Advanced Control Systems", "Biorobotics", "Biomedical Safety and Risk Assessment", "Biomedical Photonics", "Electron Microscopy", "Physiological Modeling", "Flexible Bioelectronics for Medical Applications", "Engineering Principles for Drug Delivery"))
-            .put("CS", Arrays.asList("Machine Learning: Principles and Practice","Natural Language Processing","Guided Study in Artificial Intelligence","Algorithms & Techniques for Web Searching","Cloud Computing: Theory and Practice","Machine Learning: Algorithms and Applications","Guided Study in Data Science","Topics on Information Security","Privacy-enhancing Technologies","Guided Study in Information Security","Virtual Reality Technologies and Applications","Computer Games Design","Vision and Language","Topics in Machine Learning","Project","Guided Study"))
-            .put("EE", Arrays.asList("Topics in Image Processing", "Topics in Computer Graphics", "Digital Audio Processing and Applications", "Green Electronics-Theory, Eco-design, Experiments and Applications", "Supply Chain Management", "Managing Strategic Quality"))
-            .put("ME", Arrays.asList("Advanced Automation Technology", "Sustainable Green Manufacturing", "Advanced Thermo-fluid", "Micro Systems Technology", "Mechanical Behaviour of Materials: From Metallic to Biomedical/ Biological Materials", "Applied Engineering Mechanics"))
-            .put("SEEM", Arrays.asList("Operations Management", "Engineering Management Principles and Concepts", "Project Management", "Technological Innovation and Entrepreneurship", "Asset and Maintenance Management", "Supply Chain Management"))
+            .put("BE", Arrays.asList("Micro Systems Technology", "Manufacturing of Biomedical Devices"))
+            .put("CS", Arrays.asList("Machine Learning: Principles and Practice","Natural Language Processing","Cloud Computing: Theory and Practice"))
+            .put("EE", Arrays.asList("Topics in Computer Graphics", "Digital Audio Processing and Applications"))
+            .put("ME", Arrays.asList("Advanced Automation Technology", "Micro Systems Technology"))
+            .put("IS", Arrays.asList("Social, Legal and Ethical Issues of the Internet", "Business Process and Service Management"))
             .build();
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -66,6 +66,21 @@ class SampleDataGenerator {
         dao.insert(u);
     }
 
+    private Student insertChanTaiMan() {
+        try {
+            Student student = new Student();
+            student.setStuName("Chan Tai Man");
+            student.setDOB(dateFormat.parse("2009-08-10"));
+            student.setStuId("15100001");
+
+            studentDao.addStudent(student);
+            return student;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Test
     void clearAll() {
         dao.dropCollection(User.class);
@@ -77,7 +92,8 @@ class SampleDataGenerator {
     }
 
     private void enrollCourse(List<Offer> offerList, List<Student> studentList) {
-        for (int i = 0; i < 800; i++) {
+        int size = (int)(studentList.size() * 0.8);
+        for (int i = 0; i < size; i++) {
             enroll(studentList.get(i), offerList);
         }
 
@@ -87,7 +103,7 @@ class SampleDataGenerator {
 
     private void enroll(Student student, List<Offer> offerList) {
         try {
-            int randomIdx = (int) (Math.random() * offerList.size());
+            int randomIdx = new Random().nextInt(offerList.size());
 
             Offer offer = offerList.get(randomIdx);
             if (offer.getAvailablePlaces() <= 0) {
@@ -110,7 +126,7 @@ class SampleDataGenerator {
     }
 
     private List<Offer> generateCourse(List<Department> deptList) {
-        List<Offer> result = new ArrayList<>(690);
+        List<Offer> result = new ArrayList<>();
         for (Department dept: deptList) {
             int num = 101;
 
@@ -122,13 +138,14 @@ class SampleDataGenerator {
                 c.setLevel("5");
                 dao.insert(c);
 
-                int year = 2016;
-                while(year <= 2020) {
+                int year = 2016 + new Random().nextInt(5);
+                int range = new Random().nextInt(5);
+                while(range-- > 0 && year <= 2020) {
                     Offer o = new Offer();
                     o.setCourse(c);
                     o.setDept(dept);
-                    o.setClassSize(50);
-                    o.setAvailablePlaces(50);
+                    o.setClassSize(40);
+                    o.setAvailablePlaces(40);
                     o.setYear(year++);
                     // DB insert after enroll
                     result.add(o);
@@ -143,13 +160,14 @@ class SampleDataGenerator {
                 c.setLevel("6");
                 dao.insert(c);
 
-                int year = 2016;
-                while(year <= 2020) {
+                int year = 2016 + new Random().nextInt(5);
+                int range = new Random().nextInt(5);
+                while(range-- > 0 && year <= 2020) {
                     Offer o = new Offer();
                     o.setCourse(c);
                     o.setDept(dept);
-                    o.setClassSize(50);
-                    o.setAvailablePlaces(50);
+                    o.setClassSize(40);
+                    o.setAvailablePlaces(40);
                     o.setYear(year++);
                     // DB insert after enroll
                     result.add(o);
@@ -162,8 +180,9 @@ class SampleDataGenerator {
 
     private List<Student> generateStudent() {
         List<Student> result = new ArrayList<>(STUDENT_COUNT);
-        int stuId = 15100001;
+        result.add(insertChanTaiMan());
 
+        int stuId = 15100002;
         for (int i = 0; i < STUDENT_COUNT; i++) {
             Student student = new Student();
             student.setStuName(JRand.name().gen());

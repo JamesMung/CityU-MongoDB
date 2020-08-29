@@ -3,6 +3,7 @@ package com.cityu.mongodb.web;
 import com.cityu.mongodb.constants.Constants;
 import com.cityu.mongodb.constants.Message;
 import com.cityu.mongodb.dto.CourseDto;
+import com.cityu.mongodb.query.SearchCriteria;
 import com.cityu.mongodb.service.CourseService;
 import com.cityu.mongodb.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +16,16 @@ public class CourseController {
 
     private CourseService courseService;
 
-    @GetMapping("/enrollStatistics")
-    @ResponseBody
-    public Message getEnrolledStatis() {
-        return MessageUtils.returnSuccessMsgWithContent(courseService.getStatisData(), Constants.Message.QUERY_SUCCESS);
-    }
-
     @GetMapping("/list")
     @ResponseBody
     public Message getList() {
         return MessageUtils.returnSuccessMsgWithContent(courseService.getAllList(), Constants.Message.QUERY_SUCCESS);
+    }
+
+    @GetMapping("/search")
+    @ResponseBody
+    public Message search(SearchCriteria criteria) {
+        return MessageUtils.returnSuccessMsgWithContent(courseService.searchCourse(criteria), Constants.Message.QUERY_SUCCESS);
     }
 
     @GetMapping("/{id}/{year}")

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class StudentDao extends AbstractDao {
@@ -36,17 +37,17 @@ public class StudentDao extends AbstractDao {
     }
 
     @Transactional
-    public boolean enrollCourse(User u, String courseId, Integer year) {
+    public boolean enrollCourse(Student student, String courseId, Integer year) {
         Offer course = dao.findOne(Query.query(Criteria.where("course.courseId").is(courseId).and("year").is(year)), Offer.class);
 
         if (course.getAvailablePlaces() <= 0) return false;
 
-        boolean exists = dao.exists(Query.query(Criteria.where("course.courseId").is(courseId).and("year").is(year).and("student.stuId").is(u.getStudent().getStuId())), Enrolled.class);
+        boolean exists = dao.exists(Query.query(Criteria.where("course.courseId").is(courseId).and("year").is(year).and("student.stuId").is(student.getStuId())), Enrolled.class);
 
         if (exists) return false;
 
         Enrolled e = new Enrolled();
-        e.setStudent(u.getStudent());
+        e.setStudent(student);
         e.setCourse(dao.findById(courseId, Course.class));
         e.setEnrolDate(new Date());
         e.setYear(year);
@@ -56,8 +57,8 @@ public class StudentDao extends AbstractDao {
         return true;
     }
 
-    public boolean unEnrollCourse(User u, String courseId, Integer year) {
-        Query query = Query.query(Criteria.where("course.courseId").is(courseId).and("year").is(year).and("student.stuId").is(u.getStudent().getStuId()));
+    public boolean unEnrollCourse(Student student, String courseId, Integer year) {
+        Query query = Query.query(Criteria.where("course.courseId").is(courseId).and("year").is(year).and("student.stuId").is(student.getStuId()));
         boolean exists = dao.exists(query, Enrolled.class);
 
         if (exists) {
@@ -79,5 +80,10 @@ public class StudentDao extends AbstractDao {
     public void delete(String stuId) {
         dao.remove(Query.query(Criteria.where("stuId").is(stuId)), Student.class);
         dao.remove(Query.query(Criteria.where("student.stuId").is(stuId)), Enrolled.class);
+    }
+
+    public List<Student> findNotEnrolledStudent(List<Student> studentList) {
+        List<String> list = studentList.stream().map(s -> s.getStuId()).collect(Collectors.toList());
+        return dao.find(Query.query(Criteria.where("stuId").nin(list)), Student.class);
     }
 }
