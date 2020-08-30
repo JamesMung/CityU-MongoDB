@@ -2,6 +2,7 @@ package com.cityu.mongodb.vo;
 
 public class EnrolledStatistics {
     private Integer year;
+    private Long totalEnrolled;
     private Long enrolledNum;
     private Long unEnrolledNum;
 
@@ -11,6 +12,14 @@ public class EnrolledStatistics {
 
     public void setYear(Integer year) {
         this.year = year;
+    }
+
+    public Long getTotalEnrolled() {
+        return totalEnrolled;
+    }
+
+    public void setTotalEnrolled(Long totalEnrolled) {
+        this.totalEnrolled = totalEnrolled;
     }
 
     public Long getEnrolledNum() {

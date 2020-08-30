@@ -68,7 +68,14 @@ public class CourseDao extends AbstractDao {
         if (!StringUtils.isEmpty(criteria.getLevel())) c.and("course.level").is(criteria.getLevel());
         if (criteria.getYear() != null) c.and("year").is(criteria.getYear());
 
-        return dao.find(Query.query(c), Enrolled.class);
+        if (StringUtils.isEmpty(criteria.getDeptId())) {
+            return dao.find(Query.query(c), Enrolled.class);
+        } else {
+            List<Course> courses = dao.find(Query.query(Criteria.where("dept.deptId").is(criteria.getDeptId())), Offer.class)
+                    .stream().map(offer -> offer.getCourse()).collect(Collectors.toList());
+
+            return dao.find(Query.query(c), Enrolled.class).stream().filter(e -> courses.contains(e.getCourse())).collect(Collectors.toList());
+        }
     }
 
     public Offer getOfferedByEnrolled(Enrolled enrolled) {

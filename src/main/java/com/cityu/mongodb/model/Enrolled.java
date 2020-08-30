@@ -46,4 +46,26 @@ public class Enrolled {
     public void setEnrolDate(Date enrolDate) {
         this.enrolDate = DateUtils.getCurrentZoneDate(enrolDate);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Enrolled enrolled = (Enrolled) o;
+
+        if (student != null ? !student.equals(enrolled.student) : enrolled.student != null) return false;
+        if (year != null ? !year.equals(enrolled.year) : enrolled.year != null) return false;
+        if (course != null ? !course.equals(enrolled.course) : enrolled.course != null) return false;
+        return enrolDate != null ? enrolDate.equals(enrolled.enrolDate) : enrolled.enrolDate == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = student != null ? student.hashCode() : 0;
+        result = 31 * result + (year != null ? year.hashCode() : 0);
+        result = 31 * result + (course != null ? course.hashCode() : 0);
+        result = 31 * result + (enrolDate != null ? enrolDate.hashCode() : 0);
+        return result;
+    }
 }

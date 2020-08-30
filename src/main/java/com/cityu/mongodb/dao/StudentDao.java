@@ -86,8 +86,7 @@ public class StudentDao extends AbstractDao {
         dao.remove(Query.query(Criteria.where("student.stuId").is(stuId)), Enrolled.class);
     }
 
-    public List<Student> findNotEnrolledStudent(List<Student> studentList) {
-        List<String> list = studentList.stream().map(s -> s.getStuId()).collect(Collectors.toList());
-        return dao.find(Query.query(Criteria.where("stuId").nin(list)), Student.class);
+    public long countAllStudents() {
+        return dao.count(new Query(), Student.class);
     }
 }

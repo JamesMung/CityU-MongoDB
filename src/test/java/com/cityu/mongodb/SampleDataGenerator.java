@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 class SampleDataGenerator {
@@ -132,43 +133,50 @@ class SampleDataGenerator {
 
     private void enrollCourse(List<Offer> offerList, List<Student> studentList) {
         int size = (int)(studentList.size() * 1.0);
+
+        Map<Integer, List<Offer>> offerMap = offerList.stream().collect(Collectors.groupingBy(o -> o.getYear()));
+
         for (int i = 0; i < size; i++) {
-            enroll(studentList.get(i), offerList);
+            enroll(studentList.get(i), offerMap);
         }
 
         // insert DB
         offerList.forEach(o -> dao.insert(o));
     }
 
-    private void enroll(Student student, List<Offer> offerList) {
-        try {
-            Random random = new Random();
+    private void enroll(Student student, Map<Integer, List<Offer>> offerMap) {
+            final Random random = new Random();
 
-            Set<Integer> idxSet = new HashSet<>(5);
-            for (int i = 0; i < 8; i++) {
-                idxSet.add(random.nextInt(offerList.size()));
-            }
+            offerMap.forEach((year, list) -> {
+                try {
+                    int num = 4;
 
-            for (Integer idx: idxSet) {
-                Offer offer = offerList.get(idx);
+                    Set<Integer> idxSet = new HashSet<>(num);
+                    for (int i = 0; i < num; i++) {
+                        idxSet.add(random.nextInt(list.size()));
+                    }
 
-                if (offer.getAvailablePlaces() > 0) {
-                    Enrolled e = new Enrolled();
-                    e.setStudent(student);
-                    e.setCourse(offer.getCourse());
-                    e.setYear(offer.getYear());
+                    for (Integer idx: idxSet) {
+                        Offer offer = list.get(idx);
 
-                    Calendar calendar = Calendar.getInstance();
-                    e.setEnrolDate(dateFormat.parse(offer.getYear() + "-" + calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH)));
+                        if (offer.getAvailablePlaces() > 0) {
+                            Enrolled e = new Enrolled();
+                            e.setStudent(student);
+                            e.setCourse(offer.getCourse());
+                            e.setYear(offer.getYear());
 
-                    dao.insert(e);
-                    offer.setAvailablePlaces(offer.getAvailablePlaces() - 1);
+                            Calendar calendar = Calendar.getInstance();
+                            e.setEnrolDate(dateFormat.parse(offer.getYear() + "-" + calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH)));
+
+                            dao.insert(e);
+                            offer.setAvailablePlaces(offer.getAvailablePlaces() - 1);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            }
+            });
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private List<Offer> generateCourse(List<Department> deptList) {
@@ -176,6 +184,7 @@ class SampleDataGenerator {
         for (Department dept: deptList) {
             int num = 101;
 
+            final Random random = new Random();
             List<String> l5List = L5_COURSE_MAPPING.get(dept.getDeptId());
             for (int i = 0; i < l5List.size(); i++) {
                 Course c = new Course();
@@ -184,8 +193,9 @@ class SampleDataGenerator {
                 c.setLevel("5");
                 dao.insert(c);
 
-                int year = 2016 + new Random().nextInt(5);
-                int range = new Random().nextInt(5);
+
+                int year = 2016 + random.nextInt(2);
+                int range = 3 + random.nextInt(2);
                 while(range-- > 0 && year <= 2020) {
                     Offer o = new Offer();
                     o.setCourse(c);
@@ -206,8 +216,8 @@ class SampleDataGenerator {
                 c.setLevel("6");
                 dao.insert(c);
 
-                int year = 2016 + new Random().nextInt(5);
-                int range = new Random().nextInt(5);
+                int year = 2016 + random.nextInt(2);
+                int range = 3 + random.nextInt(2);
                 while(range-- > 0 && year <= 2020) {
                     Offer o = new Offer();
                     o.setCourse(c);

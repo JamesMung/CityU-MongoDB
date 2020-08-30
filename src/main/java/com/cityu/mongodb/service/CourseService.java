@@ -148,15 +148,15 @@ public class CourseService {
     public List<EnrolledStatistics> getEnrolledStatistic() {
         List<EnrolledStatistics> result = new ArrayList<>();
 
+        final long totalStudentNum = studentDao.countAllStudents();
         courseDao.getEnrolledList(null, new SearchCriteria())
                 .stream().collect(Collectors.groupingBy(e -> e.getYear()))
                 .forEach((year, list) -> {
                     EnrolledStatistics es = new EnrolledStatistics();
                     es.setYear(year);
-                    es.setEnrolledNum(Integer.valueOf(list.size()).longValue());
-
-                    List<Student> enrolledStudents = list.stream().map(e -> e.getStudent()).collect(Collectors.toList());
-                    es.setUnEnrolledNum(Integer.valueOf(studentDao.findNotEnrolledStudent(enrolledStudents).size()).longValue());
+                    es.setTotalEnrolled(list.stream().count());
+                    es.setEnrolledNum(list.stream().map(e -> e.getStudent()).distinct().count());
+                    es.setUnEnrolledNum(totalStudentNum - es.getEnrolledNum());
 
                     result.add(es);
                 });

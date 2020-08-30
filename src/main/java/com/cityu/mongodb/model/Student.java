@@ -40,4 +40,24 @@ public class Student {
     public void setDOB(Date DOB) {
         this.DOB = DateUtils.getCurrentZoneDate(DOB);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Student student = (Student) o;
+
+        if (stuId != null ? !stuId.equals(student.stuId) : student.stuId != null) return false;
+        if (stuName != null ? !stuName.equals(student.stuName) : student.stuName != null) return false;
+        return DOB != null ? DOB.equals(student.DOB) : student.DOB == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = stuId != null ? stuId.hashCode() : 0;
+        result = 31 * result + (stuName != null ? stuName.hashCode() : 0);
+        result = 31 * result + (DOB != null ? DOB.hashCode() : 0);
+        return result;
+    }
 }
