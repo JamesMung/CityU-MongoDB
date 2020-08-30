@@ -38,9 +38,9 @@ public class StudentDao extends AbstractDao {
 
     @Transactional
     public boolean enrollCourse(Student student, String courseId, Integer year) {
-        Offer course = dao.findOne(Query.query(Criteria.where("course.courseId").is(courseId).and("year").is(year)), Offer.class);
+        Offer offer = dao.findOne(Query.query(Criteria.where("course.courseId").is(courseId).and("year").is(year)), Offer.class);
 
-        if (course.getAvailablePlaces() <= 0) return false;
+        if (offer.getAvailablePlaces() <= 0) return false;
 
         boolean exists = dao.exists(Query.query(Criteria.where("course.courseId").is(courseId).and("year").is(year).and("student.stuId").is(student.getStuId())), Enrolled.class);
 
@@ -51,8 +51,9 @@ public class StudentDao extends AbstractDao {
         e.setCourse(dao.findById(courseId, Course.class));
         e.setEnrolDate(new Date());
         e.setYear(year);
+        dao.insert(e);
 
-        dao.updateFirst(Query.query(Criteria.where("course.courseId").is(courseId).and("year").is(year)), Update.update("availablePlaces", course.getAvailablePlaces() - 1), Offer.class);
+        dao.updateFirst(Query.query(Criteria.where("course.courseId").is(courseId).and("year").is(year)), Update.update("availablePlaces", offer.getAvailablePlaces() - 1), Offer.class);
 
         return true;
     }
@@ -63,6 +64,9 @@ public class StudentDao extends AbstractDao {
 
         if (exists) {
             dao.remove(query, Enrolled.class);
+
+            Offer offer = dao.findOne(Query.query(Criteria.where("course.courseId").is(courseId).and("year").is(year)), Offer.class);
+            dao.updateFirst(Query.query(Criteria.where("course.courseId").is(courseId).and("year").is(year)), Update.update("availablePlaces", offer.getAvailablePlaces() + 1), Offer.class);
             return true;
         } else {
             return false;

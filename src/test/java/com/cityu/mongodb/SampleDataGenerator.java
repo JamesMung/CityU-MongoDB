@@ -5,12 +5,15 @@ import com.cityu.mongodb.constants.Constants;
 import com.cityu.mongodb.dao.DeptDao;
 import com.cityu.mongodb.dao.StudentDao;
 import com.cityu.mongodb.model.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import me.xdrop.jrand.JRand;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -25,7 +28,7 @@ class SampleDataGenerator {
     @Autowired
     private MongoTemplate dao;
 
-    private static final int STUDENT_COUNT = 499;
+    private static final int STUDENT_COUNT = 299;
     private static final String[] DEPT_LIST = {"BE", "CS", "EE", "ME", "IS"};
     private static final String[] DEPT_NAME_LIST = {"Biomedical Engineering", "Computer Science", "Electrical Engineering", "Mechanical Engineering", "Information Systems"};
     private static final String[] LOCATION_LIST = {"Yeung Kin Man Academic Building"};
@@ -54,6 +57,42 @@ class SampleDataGenerator {
         insertAdmin();
         List<Student> studentList = generateStudent();
         enrollCourse(offerList, studentList);
+    }
+
+    @Test
+    void offer() {
+        try {
+            Offer cs101 = dao.findOne(Query.query(Criteria.where("course.courseId").is("CS101")), Offer.class);
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(cs101);
+            System.out.println(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void enrolled() {
+        try {
+            Enrolled enrolled = dao.findOne(Query.query(Criteria.where("student.stuId").is("15100001")), Enrolled.class);
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(enrolled);
+            System.out.println(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void user() {
+        try {
+            User u = dao.findOne(Query.query(Criteria.where("student.stuId").is("15100001")), User.class);
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(u);
+            System.out.println(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void insertAdmin() {
@@ -92,7 +131,7 @@ class SampleDataGenerator {
     }
 
     private void enrollCourse(List<Offer> offerList, List<Student> studentList) {
-        int size = (int)(studentList.size() * 0.8);
+        int size = (int)(studentList.size() * 1.0);
         for (int i = 0; i < size; i++) {
             enroll(studentList.get(i), offerList);
         }
@@ -103,23 +142,30 @@ class SampleDataGenerator {
 
     private void enroll(Student student, List<Offer> offerList) {
         try {
-            int randomIdx = new Random().nextInt(offerList.size());
+            Random random = new Random();
 
-            Offer offer = offerList.get(randomIdx);
-            if (offer.getAvailablePlaces() <= 0) {
-                enroll(student, offerList);
-            } else {
-                Enrolled e = new Enrolled();
-                e.setStudent(student);
-                e.setCourse(offer.getCourse());
-                e.setYear(offer.getYear());
-
-                Calendar calendar = Calendar.getInstance();
-                e.setEnrolDate(dateFormat.parse(offer.getYear() + "-" + calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH)));
-
-                dao.insert(e);
-                offer.setAvailablePlaces(offer.getAvailablePlaces() - 1);
+            Set<Integer> idxSet = new HashSet<>(5);
+            for (int i = 0; i < 8; i++) {
+                idxSet.add(random.nextInt(offerList.size()));
             }
+
+            for (Integer idx: idxSet) {
+                Offer offer = offerList.get(idx);
+
+                if (offer.getAvailablePlaces() > 0) {
+                    Enrolled e = new Enrolled();
+                    e.setStudent(student);
+                    e.setCourse(offer.getCourse());
+                    e.setYear(offer.getYear());
+
+                    Calendar calendar = Calendar.getInstance();
+                    e.setEnrolDate(dateFormat.parse(offer.getYear() + "-" + calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH)));
+
+                    dao.insert(e);
+                    offer.setAvailablePlaces(offer.getAvailablePlaces() - 1);
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

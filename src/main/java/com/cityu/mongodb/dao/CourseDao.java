@@ -65,7 +65,7 @@ public class CourseDao extends AbstractDao {
         Criteria c = new Criteria();
         if (student != null) c.and("student.stuId").is(student.getStuId());
         if (!StringUtils.isEmpty(criteria.getCourseId())) c.and("course.courseId").is(criteria.getCourseId());
-        if (!StringUtils.isEmpty(criteria.getLevel())) c.and("course.level").is(criteria.getYear());
+        if (!StringUtils.isEmpty(criteria.getLevel())) c.and("course.level").is(criteria.getLevel());
         if (criteria.getYear() != null) c.and("year").is(criteria.getYear());
 
         return dao.find(Query.query(c), Enrolled.class);
@@ -81,7 +81,7 @@ public class CourseDao extends AbstractDao {
         Criteria c = Criteria.where("course.courseId").nin(enrolledIds);
         if (!StringUtils.isEmpty(criteria.getCourseId())) c.and("course.courseId").is(criteria.getCourseId());
         if (!StringUtils.isEmpty(criteria.getDeptId())) c.and("dept.deptId").is(criteria.getDeptId());
-        if (!StringUtils.isEmpty(criteria.getLevel())) c.and("course.level").is(criteria.getYear());
+        if (!StringUtils.isEmpty(criteria.getLevel())) c.and("course.level").is(criteria.getLevel());
         if (criteria.getYear() != null) c.and("year").is(criteria.getYear());
 
         return dao.find(Query.query(c), Offer.class);
