@@ -9,9 +9,9 @@ $(document).ready(function () {
         _deptdata = data.content;
         $.each(_deptdata, function (i, item) {
             var option = $("<option/>").data("deptdataset", item).val(item.deptId).text(item.deptId + " - " + item.deptName);
-            $('#txtdept').append(option);
+            var option2 = $("<option/>").data("deptdataset", item).val(item.deptId).text(item.deptId + " - " + item.deptName);
+            $('#txtdept').append(option2);
             $('#txtsearchdept').append(option);
-
         });
 
         var _tempdept = $.urlParam('dept');

@@ -4,7 +4,7 @@
 <head>
     <title>Course</title>
     <!-- Custom and plugin javascript -->
-    <script th:src="@{../js/course.js?v=0.2.5}"></script>
+    <script th:src="@{../js/course.js?v=0.2.6}"></script>
 </head>
 <body>
     <div layout:fragment="header_content" class="row wrapper border-bottom white-bg page-heading">
@@ -108,11 +108,9 @@
                                 <input type="hidden" id="txtdeptId" class="form-control">
                                 <div class="form-group">
                                     <label class="col-form-labe" for="txtdept">Dept.</label>
-
-                                        <select class="form-control col-sm-8 m-b" id="txtdept" name="txtdept">
-                                            <option value=""></option>
-                                        </select>
-
+                                    <select class="form-control m-b" id="txtdept" name="txtdept">
+                                        <option value=""></option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-form-label" for="txtcourseId">Course Id</label>
