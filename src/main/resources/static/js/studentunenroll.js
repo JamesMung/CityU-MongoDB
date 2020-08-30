@@ -1,6 +1,6 @@
-
 var currentTime = new Date();
 var _deptdata = [];
+var _coursedata = [];
 
 $(document).ready(function () {
     $('#txtsearchyeardiv .input-group.date').datepicker({
@@ -15,6 +15,14 @@ $(document).ready(function () {
         $.each(_deptdata, function (i, item) {
             var option = $("<option/>").data("deptdataset", item).val(item.deptId).text(item.deptId + " - " + item.deptName);
             $('#txtsearchdept').append(option);
+        });
+    });
+
+    $.getJSON("/course/list", function(data){
+        _coursedata = data.content;
+        $.each(_coursedata, function (i, item) {
+            var option = $("<option/>").data("coursedataset", item).val(item.courseId).text(item.courseId + " - " + item.title);
+            $('#txtsearchcourse').append(option);
         });
     });
 });

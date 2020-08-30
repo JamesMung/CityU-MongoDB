@@ -1,5 +1,6 @@
 ﻿var _data = [];
 var _deptdata = [];
+var _coursedata = [];
 var currentTime = new Date();
 var _firstload = true;
 
@@ -15,6 +16,14 @@ $(document).ready(function () {
 
         var _tempdept = $.urlParam('dept');
         if (IsNull(_tempdept) == false){ $('#txtsearchdept').val(_tempdept);  }
+    });
+
+    $.getJSON("/course/list", function(data){
+        _coursedata = data.content;
+        $.each(_coursedata, function (i, item) {
+            var option = $("<option/>").data("coursedataset", item).val(item.courseId).text(item.courseId + " - " + item.title);
+            $('#txtsearchcourse').append(option);
+        });
     });
 
     $('#txtyeardiv .input-group.date').datepicker({
@@ -69,6 +78,7 @@ $(function () {
 
     $.getJSON(_url, function(data){
         _data = data.content;
+
         var $modal = $('#modal-form'),
             $studentlist = $('#modal-studentform'),
             $editor = $('#editor'),

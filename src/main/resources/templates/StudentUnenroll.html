@@ -4,7 +4,7 @@
 <head>
     <title>Unenroll list</title>
     <!-- Custom and plugin javascript -->
-    <script th:src="@{../js/studentunenroll.js?v=0.1.7}"></script>
+    <script th:src="@{../js/studentunenroll.js?v=0.1.8}"></script>
 </head>
 <body>
 <div layout:fragment="header_content" class="row wrapper border-bottom white-bg page-heading">
@@ -57,7 +57,9 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label class="col-form-labe" for="txtsearchcourse">Course</label>
-                        <input type="text" id="txtsearchcourse" class="form-control">
+                        <select class="form-control m-b" id="txtsearchcourse" name="txtdept">
+                            <option value=""></option>
+                        </select>
                     </div>
                 </div>
             </div>
