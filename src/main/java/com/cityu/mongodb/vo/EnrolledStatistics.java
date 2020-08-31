@@ -37,4 +37,5 @@ public class EnrolledStatistics {
     public void setUnEnrolledNum(Long unEnrolledNum) {
         this.unEnrolledNum = unEnrolledNum;
     }
+
 }

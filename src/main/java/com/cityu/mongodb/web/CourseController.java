@@ -53,4 +53,11 @@ public class CourseController {
             return MessageUtils.returnErrorMsg(Constants.Message.INSERT_FAILED, "Course");
         }
     }
+
+    @DeleteMapping("/delete")
+    @ResponseBody
+    public Message delCourse(SearchCriteria criteria) {
+        courseService.delCourse(criteria);
+        return MessageUtils.returnSuccessMsg(Constants.Message.DELETE_SUCCEED);
+    }
 }

@@ -163,4 +163,8 @@ public class CourseService {
 
         return result;
     }
+
+    public void delCourse(SearchCriteria criteria) {
+        courseDao.delCourse(criteria);
+    }
 }

@@ -2,11 +2,14 @@ package com.cityu.mongodb.model;
 
 import com.cityu.mongodb.utils.DateUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.data.annotation.Id;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 public class Enrolled {
+    @Id
+    private String id;
     private Student student;
     private Integer year;
     private Course course;
@@ -14,6 +17,14 @@ public class Enrolled {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date enrolDate;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Student getStudent() {
         return student;

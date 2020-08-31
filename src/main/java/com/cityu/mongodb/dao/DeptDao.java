@@ -47,10 +47,10 @@ public class DeptDao extends AbstractDao {
 
     @Transactional
     public void deleteDept(String deptId) {
-        dao.remove(Department.class).matching(Criteria.where("deptId").is(deptId)).findAndRemove();
+        List<Offer> removedOffers = dao.findAllAndRemove(Query.query(Criteria.where("dept.deptId").is(deptId)), Offer.class);
+        dao.findAllAndRemove(Query.query(Criteria.where("deptId").is(deptId)), Department.class);
 
-        List<Offer> removedOffer = dao.remove(Offer.class).matching(Criteria.where("dept.deptId").is(deptId)).findAndRemove();
-        List<String> courseIds = removedOffer.stream().map(o -> o.getCourse().getCourseId()).collect(Collectors.toList());
+        List<String> courseIds = removedOffers.stream().map(o -> o.getCourse().getCourseId()).collect(Collectors.toList());
         dao.remove(Query.query(Criteria.where("course.courseId").in(courseIds)), Enrolled.class);
     }
 

@@ -1,11 +1,23 @@
 package com.cityu.mongodb.model;
 
+import org.springframework.data.annotation.Id;
+
 public class Offer {
+    @Id
+    private String id;
     private Department dept;
     private Course course;
     private Integer year;
     private Integer classSize;
     private Integer availablePlaces;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Department getDept() {
         return dept;

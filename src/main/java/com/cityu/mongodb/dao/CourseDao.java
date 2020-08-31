@@ -97,4 +97,11 @@ public class CourseDao extends AbstractDao {
     public List<Course> getCourseList() {
         return dao.findAll(Course.class);
     }
+
+    public void delCourse(SearchCriteria criteria) {
+        dao.remove(Query.query(Criteria.where("courseId").is(criteria.getCourseId())), Course.class);
+
+        dao.remove(Query.query(Criteria.where("course.courseId").is(criteria.getCourseId()).and("dept.deptId").is(criteria.getDeptId()).and("year").is(criteria.getYear())), Offer.class);
+        dao.remove(Query.query(Criteria.where("course.courseId").is(criteria.getCourseId()).and("year").is(criteria.getYear())), Enrolled.class);
+    }
 }

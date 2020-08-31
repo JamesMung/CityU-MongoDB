@@ -29,7 +29,7 @@ class SampleDataGenerator {
     @Autowired
     private MongoTemplate dao;
 
-    private static final int STUDENT_COUNT = 299;
+    private static final int STUDENT_COUNT = 258;
     private static final String[] DEPT_LIST = {"BE", "CS", "EE", "ME", "IS"};
     private static final String[] DEPT_NAME_LIST = {"Biomedical Engineering", "Computer Science", "Electrical Engineering", "Mechanical Engineering", "Information Systems"};
     private static final String[] LOCATION_LIST = {"Yeung Kin Man Academic Building"};
@@ -195,7 +195,7 @@ class SampleDataGenerator {
 
 
                 int year = 2016 + random.nextInt(2);
-                int range = 3 + random.nextInt(2);
+                int range = 4 + random.nextInt(2);
                 while(range-- > 0 && year <= 2020) {
                     Offer o = new Offer();
                     o.setCourse(c);
@@ -217,7 +217,7 @@ class SampleDataGenerator {
                 dao.insert(c);
 
                 int year = 2016 + random.nextInt(2);
-                int range = 3 + random.nextInt(2);
+                int range = 4 + random.nextInt(2);
                 while(range-- > 0 && year <= 2020) {
                     Offer o = new Offer();
                     o.setCourse(c);
