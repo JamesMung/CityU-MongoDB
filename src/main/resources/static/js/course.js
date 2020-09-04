@@ -225,15 +225,16 @@ $(function () {
             if (this.checkValidity && !this.checkValidity()) return;
             e.preventDefault();
             var row = $modal.data('row');
-            values = {
+            coursedata = {
                 deptId: $editor.find('#txtdept').val(),
                 courseId: $editor.find('#txtcourseId').val(),
                 courseTitle: $editor.find('#txtcoursetitle').val(),
                 level: $editor.find('#txtlevel').val(),
-                year: $editor.find('#actiondate').val().getFullYear(),
-                classSize: $editor.find('#txtclassSize').val().getFullYear(),
+                year: $editor.find('#txtyeardate').val(),
+                classSize: $editor.find('#txtclassSize').val(),
                 availablePlaces: $editor.find('#txtavailableplaces').val(),
             };
+
 
             swal({
                 title: "Alert",
@@ -247,7 +248,7 @@ $(function () {
                 closeOnCancel: true
             }, function (isConfirm) {
                 if (isConfirm) {
-                    UpdateCourse(values)
+                    UpdateCourse(coursedata);
                 } else {
                     return
                 }
@@ -298,7 +299,7 @@ function UpdateCourse(values) {
         if (_data.success == true) {
             swal({
                 title: "Updated",
-                text:  _de_data.msg,
+                text:  _data.msg,
                 type: "success",
                 showCancelButton: false,
                 confirmButtonColor: "#DD6B55",
